@@ -4,5 +4,5 @@ from vouchers.views import home_view
 
 urlpatterns = [
     path('', home_view, name='home'),
-    path('admin/', admin.site.urls),
+    path('site-admin/', admin.site.urls),
 ]

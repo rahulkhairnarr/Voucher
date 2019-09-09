@@ -8,22 +8,27 @@ Home
     <div class="row">
         <div class="col s3"></div>
         <div class="col s6">
+            <!-- Forming Card for Product -->
             <div class="card">
+                <!-- Image Division -->
                 <div class="card-image">
                   <img src="https://www.w3schools.com/w3images/hamburger.jpg">
                   <span class="card-title black-text text-darken-3">Burger</span>
                 </div>
+                <!-- Description for Product -->
                 <div class="card-content">
                   <p>A burger is a sandwich consisting of one or more cooked patties of ground meat,
                       usually beef, placed inside a sliced bread roll or bun. The patty may be pan fried, grilled,
                       or flame broiled. A hamburger topped with cheese is called a cheeseburger.</p>
                 </div>
+
+                <!-- Action contain input field and button from user -->
                 <div class="card-action">
                    <div class="row">
                     <form class="col s12" action="." method="post">
                         {% csrf_token %}
-                        <h6>Rs.100</h6>
-                        {{ discount_field.as_p }}
+                        <h6>$100</h6>
+                        {{ voucher_form.as_p }}
                          <button class="col s4 btn waves-effect waves-light blue lighten-2" style="margin-top: 1.5vw, margin-left: 5px" id="submit-code" type="submit" name="action">Apply Code
                           </button>
                     </form>
@@ -35,21 +40,47 @@ Home
     </div>
 </div>
 <script>
+
+    // Getting alertTrigger to display modal or not
     var alertTrigger = {{ alert_window }}
 
-    if ({{ alert_window }} && !{{ max_used }}  && {{ code_exist }}) {
+    // If Code exist, not exceed maximum limit and discount type is in percent
+    if ({{ alert_window }} && !{{ max_used }}  && {{ code_exist }} 
+    	&& '{{ discount_type }}' === 'percent') {
+
+    	// Trigger Success Model
         Swal.fire({
           type: 'success',
           title: 'Congratulation',
-          text: 'You ' + {{ discount_percent }} + '% discount'
+          text: 'You got ' + {{ discount_value }} + '% of discount'
         })
-    }else if({{ max_used }}){
+
+     // If Code exist, not exceed maximum limit and discount type is in amount
+    }else if ({{ alert_window }} && !{{ max_used }}  
+    	&& {{ code_exist }} && '{{ discount_type }}' === 'amount') {
+
+    	// Trigger Success Model
+        Swal.fire({
+          type: 'success',
+          title: 'Congratulation',
+          text: 'You got $' + {{ discount_value }} + ' of discount'
+        })
+    }
+
+    // If code exceed maximum limit
+    else if({{ max_used }}){
+
+    	// Trigger max limit Model
         Swal.fire({
           type: 'error',
           title: 'Oops...',
           text: 'Sorry, code already used max times'
         })
+
+    // if entered code doesn't exist
     }else if(!{{ code_exist }}) {
+
+    	// Trigger Error Model
         Swal.fire({
           type: 'error',
           title: 'Oops...',
